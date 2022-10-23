@@ -1,0 +1,67 @@
+{
+  "code": 200,
+  "data":[
+    {
+      "expression": "${tplCategory}",
+      "text": "使用的模板"
+    },
+    {
+      "expression": "${tableName}",
+      "text": "表名称"
+    },
+    {
+      "expression": "${functionName}",
+      "text": "生成功能名"
+    },
+    {
+      "expression": "${ClassName}",
+      "text": "实体类名称(首字母大写) "
+    },
+    {
+      "expression": "${className}",
+      "text": "实体类名称（取消大写）"
+    },
+    {
+      "expression": "${moduleName}",
+      "text": "生成模块名"
+    },
+    {
+      "expression": "${BusinessName}",
+      "text": "生成业务名(首字母大写)"
+    },
+    {
+      "expression": "${businessName}",
+      "text": "生成业务名"
+    },{
+      "expression": "${basePackage}",
+      "text": "包名称前缀"
+    },{
+      "expression": "${packageName}",
+      "text": "包名称"
+    },
+    {
+      "expression": "${author}",
+      "text": "生成作者"
+    },
+    {
+      "expression": "${datetime}",
+      "text": "当前时间"
+    },{
+      "expression": "${pkColumn}",
+      "text": "主键信息"
+    },{
+      "expression": "${importList}",
+      "text": "需要导入的包列表"
+    },
+    {
+      "expression": "${permissionPrefix}",
+      "text": "权限前缀"
+    },{
+      "expression": "${columns}",
+      "text": "表列信息"
+    },{
+      "expression": "${table}",
+      "text": "表信息"
+    }
+  ]
+}
