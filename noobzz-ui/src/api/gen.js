@@ -1,4 +1,37 @@
 import request from '@/utils/request'
+import { data } from 'autoprefixer'
+
+export function getTemplateList(query) {
+  return request({
+    url: '/gen/getTemplateList',
+    method: 'get',
+    params: query
+  })
+}
+
+export function getTemplate(query) {
+  return request({
+    url: '/gen/getTemplate',
+    method: 'get',
+    params: query
+  })
+}
+
+export function deleteTemplate(query) {
+  return request({
+    url: '/gen/delete',
+    method: 'delete',
+    params: { templatePath: query }
+  })
+}
+
+export function createTemplate(data) {
+  return request({
+    url: '/gen/createTemplate',
+    method: 'post',
+    data: data
+  })
+}
 
 // 查询生成表数据
 export function listTable(query) {
@@ -71,6 +104,13 @@ export function genCode(tableName) {
 export function synchDb(tableName) {
   return request({
     url: '/gen/synchDb/' + tableName,
+    method: 'get'
+  })
+}
+
+export function customPreview(tableId) {
+  return request({
+    url: '/gen/customPreview/' + tableId,
     method: 'get'
   })
 }

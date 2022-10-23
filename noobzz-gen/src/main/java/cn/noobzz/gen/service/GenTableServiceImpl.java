@@ -1,5 +1,6 @@
 package cn.noobzz.gen.service;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.HttpUtil;
 import cn.noobzz.gen.constant.GenConstants;
@@ -7,6 +8,7 @@ import cn.noobzz.gen.domain.GenTable;
 import cn.noobzz.gen.domain.GenTableColumn;
 import cn.noobzz.gen.mapper.GenTableColumnMapper;
 import cn.noobzz.gen.mapper.GenTableMapper;
+import cn.noobzz.gen.mapper.ITemplateMapper;
 import cn.noobzz.gen.util.GenUtils;
 import cn.noobzz.gen.util.VelocityInitializer;
 import cn.noobzz.gen.util.VelocityUtils;
@@ -28,9 +30,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -51,6 +51,9 @@ public class GenTableServiceImpl implements IGenTableService
 
     @Autowired
     private GenTableColumnMapper genTableColumnMapper;
+
+    @Autowired
+    private ITemplateMapper templateMapper;
 
     /**
      * 查询业务信息
@@ -208,6 +211,42 @@ public class GenTableServiceImpl implements IGenTableService
         // 获取模板列表
         List<String> templates = VelocityUtils.getTemplateList(table.getTplCategory());
         for (String template : templates)
+        {
+            // 渲染模板
+            StringWriter sw = new StringWriter();
+            Template tpl = Velocity.getTemplate(template, "UTF-8");
+//            从class(类路径)中加载模板文件
+            tpl.merge(context, sw);
+            dataMap.put(template, sw.toString());
+        }
+        return dataMap;
+    }
+
+    @Override
+    public Map<String, String> customPreviewCode(Long tableId) {
+        Map<String, String> dataMap = new LinkedHashMap<>();
+        // 查询表信息
+        GenTable table = genTableMapper.selectGenTableById(tableId);
+        // 设置主子表信息
+        setSubTable(table);
+        // 设置主键列信息
+        setPkColumn(table);
+
+        // 初始化引擎
+        VelocityInitializer.initVelocity();
+
+        //准备模板数据
+        VelocityContext context = VelocityUtils.prepareContext(table);
+
+        // 获取模板列表
+        HashMap<String, Object> hashMap = new HashMap<String, Object>();
+        hashMap.put("ids",Convert.toStrArray(table.getTemplateSelector()));
+        List<cn.noobzz.gen.domain.Template> templates = templateMapper.selectTemplateListByDynamic(hashMap);
+        List<String> templatesPaths = new ArrayList<>();
+        for (cn.noobzz.gen.domain.Template t : templates){
+            templatesPaths.add(t.getPath());
+        }
+        for (String template : templatesPaths)
         {
             // 渲染模板
             StringWriter sw = new StringWriter();

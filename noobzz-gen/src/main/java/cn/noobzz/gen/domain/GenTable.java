@@ -97,6 +97,16 @@ public class GenTable
 
     private String remark;
 
+    private String templateSelector;
+
+    public String getTemplateSelector() {
+        return templateSelector;
+    }
+
+    public void setTemplateSelector(String templateSelector) {
+        this.templateSelector = templateSelector;
+    }
+
     public String getRemark() {
         return remark;
     }

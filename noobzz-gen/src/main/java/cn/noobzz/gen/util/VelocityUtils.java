@@ -1,6 +1,7 @@
 package cn.noobzz.gen.util;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.noobzz.gen.constant.GenConstants;
@@ -10,10 +11,9 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import org.apache.velocity.VelocityContext;
 import org.apache.commons.lang3.StringUtils;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
+import java.io.File;
+import java.util.*;
 
 /**
  * 模板工具类
@@ -131,7 +131,7 @@ public class VelocityUtils
     public static List<String> getTemplateList(String tplCategory)
     {
         List<String> templates = new ArrayList<String>();
-        templates.add("vm/java/domain.java.vm");
+//        templates.add("vm/java/domain.java.vm");
         templates.add("vm/java/mapper.java.vm");
         templates.add("vm/java/service.java.vm");
         templates.add("vm/java/serviceImpl.java.vm");
@@ -154,6 +154,7 @@ public class VelocityUtils
         }
         return templates;
     }
+
 
     /**
      * 获取文件名
@@ -400,5 +401,53 @@ public class VelocityUtils
             }
         }
         return num;
+    }
+
+    public static void getTemplateTree(File file, List<Object> list){
+        if (file.isDirectory()){
+            String label = file.getName();
+            List<Object> chList = new ArrayList<>();
+            HashMap<String, Object> chMap = new HashMap<>();
+            File[] ls = FileUtil.ls(file.getPath());
+            chMap.put("label",label);
+            chMap.put("children",chList);
+            list.add(chMap);
+            for (File file1 :ls){
+                getTemplateTree(file1,chList);
+            }
+        }else {
+            HashMap<String, Object> chMap = new HashMap<>();
+            String label = file.getName();
+            chMap.put("label",label);
+            list.add(chMap);
+        }
+    }
+
+    /**
+     * @author ZZJ
+     * @date 2022/10/23
+     * @param file
+     * @param fileName
+     * @return java.lang.String
+     * @desc  获取文件内容
+     */
+    public static String getTemplateContent(File file,String fileName){
+        if (file.isDirectory()){
+            File[] ls = FileUtil.ls(file.getPath());
+            for (File file1 :ls){
+                String templateContent = getTemplateContent(file1, fileName);
+                if (!"".equals(templateContent)){
+                    return templateContent;
+                }
+            }
+        }else {
+            String absolutePath = file.getAbsolutePath();
+            if (fileName.equals(file.getName())) {
+                System.out.println(FileUtil.readUtf8String(absolutePath));
+                return FileUtil.readUtf8String(absolutePath);
+            }
+        }
+
+        return "";
     }
 }

@@ -116,7 +116,6 @@ export function param2Obj(url) {
   return obj
 }
 
-
 /**
  * 通用js方法封装处理
  * Copyright (c) 2019 ruoyi
@@ -277,12 +276,12 @@ export function handleTree(data, id, parentId, children) {
     parentId: parentId || 'parentId',
     childrenList: children || 'children'
   }
-
   var childrenListMap = {}
   var nodeIds = {}
   var tree = []
 
   for (const d of data) {
+    console.log('nnnnnnnnnnnnnnnnnnnnn')
     const parentId = d[config.parentId]
     if (childrenListMap[parentId] == null) {
       childrenListMap[parentId] = []

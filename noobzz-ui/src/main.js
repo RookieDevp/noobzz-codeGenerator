@@ -6,9 +6,11 @@ Vue.use(plugins)
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/en' // lang i18n
-
+// 分页组件
+import Pagination from '@/components/Pagination'
+Vue.component('Pagination', Pagination)
 import '@/styles/index.scss' // global css
-
+import { resetForm } from '@/utils/index.js'
 import App from './App'
 import store from './store'
 import router from './router'
@@ -16,6 +18,16 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
+import VueCodeMirror from 'vue-codemirror'
+import 'codemirror/lib/codemirror.css'
+Vue.use(VueCodeMirror)
+
+import Clipboard from 'clipboard'
+Vue.prototype.Clipboard = Clipboard
+import directive from './directive'
+Vue.use(directive)
+
+Vue.prototype.resetForm = resetForm
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -30,9 +42,9 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // set ElementUI lang to EN
-Vue.use(ElementUI, { locale })
+// Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
-// Vue.use(ElementUI)
+Vue.use(ElementUI)
 
 Vue.config.productionTip = false
 

@@ -111,11 +111,59 @@ export const constantRoutes = [
         path: 'index',
         name: 'dbTable',
         component: () => import('@/views/dbTable/index'),
-        meta: { title: '代码生成', icon: 'form' }
+        meta: { title: '代码生成', icon: '代码' }
       }
     ]
   },
-
+  {
+    path: '/templateList',
+    component: Layout,
+    children: [
+      {
+        path: 'templateList',
+        name: 'templateList',
+        component: () => import('@/views/genTemplate/templateList'),
+        meta: { title: '模板列表', icon: '列表' }
+      }
+    ]
+  },
+  {
+    path: '/templateTree',
+    component: Layout,
+    children: [
+      {
+        path: 'templateTree',
+        name: 'templateTree',
+        component: () => import('@/views/genTemplate/templateTree'),
+        meta: { title: '代码模板', icon: 'form' }
+      }
+    ]
+  },
+  {
+    path: 'templateEdit',
+    component: Layout,
+    children: [
+      {
+        path: '/templateEdit',
+        name: 'templateEdit',
+        component: () => import('@/views/genTemplate/templateEdit'),
+        meta: { title: '修改模板', icon: 'form' }
+      }
+    ],
+    hidden: true
+  },
+  {
+    path: '/dataSourceList',
+    component: Layout,
+    children: [
+      {
+        path: 'dataSourceList',
+        name: 'dataSourceList',
+        component: () => import('@/views/dataSource/dataSourceList'),
+        meta: { title: '数据源', icon: '数据库' }
+      }
+    ]
+  },
   // {
   //   path: '/nested',
   //   component: Layout,

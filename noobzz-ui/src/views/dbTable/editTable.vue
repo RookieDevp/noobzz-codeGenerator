@@ -168,6 +168,7 @@ export default {
       getGenTable(tableId).then(res => {
         this.columns = res.data.rows
         this.info = res.data.info
+        this.info.templateSelector = this.info.templateSelector.split(',')
         this.tables = res.data.tables
       })
       /** 查询字典下拉列表 */
@@ -209,6 +210,8 @@ export default {
             treeParentCode: genTable.treeParentCode,
             parentMenuId: genTable.parentMenuId
           }
+          genTable.templateSelector = genTable.templateSelector.join(',')
+          console.log(genTable)
           updateGenTable(genTable).then(res => {
             this.$modal.msgSuccess(res.msg)
             if (res.code === 200) {

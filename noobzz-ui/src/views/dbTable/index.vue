@@ -152,10 +152,10 @@
     <el-dialog :title="preview.title" :visible.sync="preview.open" width="80%" top="5vh" append-to-body class="scrollbar">
       <el-tabs v-model="preview.activeName">
         <el-tab-pane
-          v-for="(value, key) in preview.data"
+          v-for="(value, key,index) in preview.data"
           :key="key"
           :label="key.substring(key.lastIndexOf('/')+1,key.indexOf('.vm'))"
-          :name="key.substring(key.lastIndexOf('/')+1,key.indexOf('.vm'))"
+          :name="index+''"
         >
           <!--          <el-link v-clipboard:copy="value" v-clipboard:success="clipboardSuccess" :underline="false" icon="el-icon-document-copy" style="float:right">复制</el-link>-->
           <pre><code class="hljs" v-html="highlightedCode(value, key)" /></pre>
@@ -171,7 +171,8 @@
 import importTable from './importTable'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
-import { delTable, genCode, listTable, previewTable, synchDb } from '@/api/gen'
+import { customPreview, customPreviewTable, delTable, genCode, listTable, previewTable, synchDb } from '@/api/gen'
+import { handleTree } from '@/utils'
 hljs.registerLanguage('java', require('highlight.js/lib/languages/java'))
 hljs.registerLanguage('xml', require('highlight.js/lib/languages/xml'))
 hljs.registerLanguage('html', require('highlight.js/lib/languages/xml'))
@@ -216,16 +217,14 @@ export default {
         open: false,
         title: '代码预览',
         data: {},
-        activeName: 'domain.java'
+        activeName: '0'
       }
     }
   },
   created() {
-    console.log('ssss')
     this.getList()
   },
   activated() {
-    console.log('aaaaa')
     const time = this.$route.query.t
     if (time != null && time !== this.uniqueId) {
       this.uniqueId = time
@@ -285,14 +284,15 @@ export default {
     },
     /** 预览按钮 */
     handlePreview(row) {
-      previewTable(row.tableId).then(response => {
+      customPreview(row.tableId).then(response => {
         this.preview.data = response.data
         this.preview.open = true
-        this.preview.activeName = 'domain.java'
+        this.preview.activeName = '0'
       })
     },
     /** 高亮显示 */
     highlightedCode(code, key) {
+      console.log(code)
       const vmName = key.substring(key.lastIndexOf('/') + 1, key.indexOf('.vm'))
       var language = vmName.substring(vmName.indexOf('.') + 1, vmName.length)
       const result = hljs.highlight(language, code || '', true)
@@ -312,7 +312,7 @@ export default {
     /** 修改按钮操作 */
     handleEditTable(row) {
       const tableId = row.tableId || this.ids[0]
-      const tableName = row.tableName || this.tableNames[0]
+      // const tableName = row.tableName || this.tableNames[0]
       const params = { pageNum: this.queryParams.pageNum }
       this.$router.push({ path: '/tool/gen-edit/index/' + tableId, query: { p: params }})
     },

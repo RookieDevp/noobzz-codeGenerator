@@ -1,12 +1,19 @@
 package cn.noobzz.gen.controller;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileNameUtil;
+import cn.hutool.core.io.file.FileReader;
+import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.noobzz.gen.domain.AjaxResult;
 import cn.noobzz.gen.domain.GenTable;
 import cn.noobzz.gen.domain.GenTableColumn;
+import cn.noobzz.gen.domain.VelocityTemplate;
 import cn.noobzz.gen.service.IGenTableColumnService;
 import cn.noobzz.gen.service.IGenTableService;
 import cn.noobzz.gen.util.VelocityUtils;
+import com.alibaba.fastjson2.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.io.IOUtils;
@@ -15,10 +22,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * 代码生成 操作处理
@@ -35,10 +45,57 @@ public class GenController
     @Autowired
     private IGenTableColumnService genTableColumnService;
 
-    @GetMapping("/getTemplateList/{tpl}")
-    public List<String> getTemplateList(@PathVariable String tpl){
-        List<String> templates = VelocityUtils.getTemplateList(tpl);
-        return templates;
+    /***
+     * @author ZZJ
+     * @date 2022/10/23
+     * @return cn.noobzz.gen.domain.AjaxResult
+     * @desc  系统File流查询
+     */
+    @Deprecated
+    @GetMapping("/getTemplateList")
+    public AjaxResult getTemplateList(){
+        File[] vms = FileUtil.ls("vm");
+        List<Object> arrayList = new ArrayList<>();
+        Map<String, Object> res = new HashMap<>();
+        for(File file : vms){
+            VelocityUtils.getTemplateTree(file,arrayList);
+        }
+        res.put("tree",arrayList);
+        return AjaxResult.success(res);
+    }
+
+    @Deprecated
+    @GetMapping("/getTemplate")
+    public AjaxResult getTemplate(@RequestParam("templatePath") String templatePath){
+        String templateContent = FileUtil.readUtf8String("vm/" + templatePath);
+        return AjaxResult.success("查询失败",templateContent);
+    }
+
+    @PostMapping("/createTemplate")
+    public AjaxResult createTemplate(@RequestBody VelocityTemplate template){
+    String dir = FileUtil.getWebRoot().getAbsolutePath()+"/src/main/resources/vm/"+template.getDir();
+    File vm = new File(dir);
+    if (!FileUtil.exist(vm)) {
+        vm = FileUtil.mkdir(dir);
+    }
+    File file = FileUtil.newFile(vm.getPath() + "/" + template.getName()+".vm");
+    File utf8String = FileUtil.writeUtf8String(template.getContent(), file);
+    FileUtil.copy(vm,FileUtil.file("vm"),true);
+    return AjaxResult.success("新建成功",utf8String.getAbsolutePath());
+    }
+
+    @DeleteMapping("/delete")
+    public AjaxResult deleteTemplate(@RequestParam("templatePath") String templatePath){
+
+        boolean del = FileUtil.del("vm/" + templatePath);
+        boolean del2 = FileUtil.del(FileUtil.getWebRoot().getAbsolutePath() + "/src/main/resources/vm/" + templatePath);
+        if (FileUtil.isDirEmpty(FileUtil.file("vm/" + templatePath).getParentFile())){
+            boolean del1 = FileUtil.del(FileUtil.file("vm/" + templatePath).getParentFile());
+            boolean del3 = FileUtil.del(FileUtil.file(FileUtil.getWebRoot().getAbsolutePath() + "/src/main/resources/vm/" + templatePath).getParentFile());
+            return AjaxResult.success(del && del1 && del2 && del3);
+        }
+
+        return AjaxResult.success(del && del2);
     }
 
     /**
@@ -132,6 +189,13 @@ public class GenController
     public AjaxResult preview(@PathVariable("tableId") Long tableId) throws IOException
     {
         Map<String, String> dataMap = genTableService.previewCode(tableId);
+        return AjaxResult.success(dataMap);
+    }
+
+    @GetMapping("/customPreview/{tableId}")
+    public AjaxResult customPreview(@PathVariable("tableId") Long tableId) throws IOException
+    {
+        Map<String, String> dataMap = genTableService.customPreviewCode(tableId);
         return AjaxResult.success(dataMap);
     }
 

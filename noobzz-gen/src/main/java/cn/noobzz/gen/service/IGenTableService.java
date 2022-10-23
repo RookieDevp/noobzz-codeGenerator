@@ -82,6 +82,8 @@ public interface IGenTableService
      */
     public Map<String, String> previewCode(Long tableId);
 
+    public Map<String, String> customPreviewCode(Long tableId);
+
     /**
      * 生成代码（下载方式）
      * 

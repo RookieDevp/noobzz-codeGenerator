@@ -28,7 +28,6 @@ public class GenUtils
         genTable.setBusinessName(getBusinessName(genTable.getTableName()));
         genTable.setFunctionName(replaceText(genTable.getTableComment()));
         genTable.setFunctionAuthor(GenConfig.getAuthor());
-//        genTable.setCreateBy(operName);
     }
 
     /**
@@ -185,7 +184,7 @@ public class GenUtils
             String[] searchList = StringUtils.split(tablePrefix, ",");
             tableName = replaceFirst(tableName, searchList);
         }
-        return StrUtil.toCamelCase(tableName);
+        return StrUtil.upperFirst(tableName);
     }
 
     /**
