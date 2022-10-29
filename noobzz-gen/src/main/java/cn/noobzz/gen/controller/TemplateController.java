@@ -5,6 +5,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ByteUtil;
+import cn.noobzz.gen.constant.TemplateConstants;
 import cn.noobzz.gen.domain.AjaxResult;
 import cn.noobzz.gen.domain.GenTable;
 import cn.noobzz.gen.domain.Template;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author: ZZJ
@@ -71,9 +73,11 @@ public class TemplateController {
     @PostMapping("/getTemplateDynamic")
     public AjaxResult getTemplateDynamic(@RequestBody String post){
         Map map = JSON.parseObject(post, Map.class);
-        PageHelper.startPage(Convert.toInt(map.get("pageNum"),1),Convert.toInt(map.get("pageSize"),10));
         List<Template> templates = templateService.selectTemplateListByDynamic(map);
-        return AjaxResult.success(new PageInfo<>(templates));
+        PageInfo<Template> templatePageInfo = new PageInfo<>(templates);
+        int size = templates.stream().filter(item -> TemplateConstants.TYPE_FILE.equals(item.getTemplateType())).collect(Collectors.toList()).size();
+        templatePageInfo.setSize(size);
+        return AjaxResult.success(templatePageInfo);
     }
 
     /***

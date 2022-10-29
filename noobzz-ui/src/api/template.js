@@ -47,7 +47,8 @@ export function editTemplate(data) {
 
 export function javaConfig() {
   return request({
-    url: `./java.json?q=${new Date().getTime()}`,
+    baseURL: 'http://localhost:9528/',
+    url: `/java.json?q=${new Date().getTime()}`,
     method: 'get'
   })
 }

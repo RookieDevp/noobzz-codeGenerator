@@ -16,7 +16,10 @@ import cn.noobzz.gen.util.VelocityUtils;
 import com.alibaba.fastjson2.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +38,7 @@ import java.util.Map;
  * 
  * @author ruoyi
  */
+@Slf4j
 @RequestMapping("/gen")
 @RestController
 public class GenController
@@ -107,6 +111,7 @@ public class GenController
     {
         PageHelper.startPage(Convert.toInt(pageNum),Convert.toInt(pageSize));
         List<GenTable> list = genTableService.selectGenTableList(genTable);
+        log.info(list.toString());
         return AjaxResult.success(new PageInfo<>(list));
     }
 

@@ -31,6 +31,7 @@
     <select id="selectTemplateListByDynamic" resultType="Template">
         <include refid="selectTemplateVo"/>
         <where>
+            <if test="templateId != null  and templateId != ''"> and template_id = #{templateId}</if>
             <if test="templateName != null  and templateName != ''"> and template_name like concat('%', #{templateName}, '%')</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>

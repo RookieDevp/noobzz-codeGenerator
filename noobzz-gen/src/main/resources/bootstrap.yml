@@ -10,6 +10,8 @@ spring:
   profiles:
     # 环境配置
     active: dev
+  jackson:
+    time-zone: GMT+8
   cloud:
     nacos:
       discovery:
@@ -23,3 +25,4 @@ spring:
         # 共享配置
         shared-configs:
           - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+

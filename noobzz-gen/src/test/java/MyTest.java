@@ -23,6 +23,5 @@ public class MyTest {
         System.out.println("aa = " + aa);
         List<Integer> integers = Arrays.asList(1, 2, 5, 3, 4, 7);
         integers.stream().filter(integer -> integer > 4).forEach(System.out::println);
-
     }
 }

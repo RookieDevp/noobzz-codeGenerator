@@ -120,8 +120,8 @@ export const constantRoutes = [
     component: Layout,
     children: [
       {
-        path: 'templateList',
-        name: 'templateList',
+        path: 'list',
+        name: 'list',
         component: () => import('@/views/genTemplate/templateList'),
         meta: { title: '模板列表', icon: '列表' }
       }

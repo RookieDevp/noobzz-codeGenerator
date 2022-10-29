@@ -155,7 +155,6 @@ public class VelocityUtils
         return templates;
     }
 
-
     /**
      * 获取文件名
      */
@@ -175,6 +174,7 @@ public class VelocityUtils
         String javaPath = PROJECT_PATH + "/" + StrUtil.replace(packageName, ".", "/");
         String mybatisPath = MYBATIS_PATH + "/" + moduleName;
         String vuePath = "vue";
+        String defaultPath = "default";
 
         if (template.contains("domain.java.vm"))
         {
@@ -219,6 +219,8 @@ public class VelocityUtils
         else if (template.contains("index-tree.vue.vm"))
         {
             fileName = StrUtil.format("{}/views/{}/{}/index.vue", vuePath, moduleName, businessName);
+        }else if (template.contains("default")){
+            fileName = StrUtil.format("{}/"+template.substring(template.lastIndexOf('/')), defaultPath);
         }
         return fileName;
     }

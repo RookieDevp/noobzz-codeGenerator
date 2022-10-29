@@ -4,6 +4,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.HttpUtil;
 import cn.noobzz.gen.constant.GenConstants;
+import cn.noobzz.gen.constant.TemplateConstants;
 import cn.noobzz.gen.domain.GenTable;
 import cn.noobzz.gen.domain.GenTableColumn;
 import cn.noobzz.gen.mapper.GenTableColumnMapper;
@@ -241,6 +242,7 @@ public class GenTableServiceImpl implements IGenTableService
         // 获取模板列表
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
         hashMap.put("ids",Convert.toStrArray(table.getTemplateSelector()));
+        hashMap.put("templateType", TemplateConstants.TYPE_FILE);
         List<cn.noobzz.gen.domain.Template> templates = templateMapper.selectTemplateListByDynamic(hashMap);
         List<String> templatesPaths = new ArrayList<>();
         for (cn.noobzz.gen.domain.Template t : templates){
@@ -409,8 +411,11 @@ public class GenTableServiceImpl implements IGenTableService
         VelocityContext context = VelocityUtils.prepareContext(table);
 
         // 获取模板列表
-        List<String> templates = VelocityUtils.getTemplateList(table.getTplCategory());
-        for (String template : templates)
+        HashMap<String, Object> hashMap = new HashMap<String, Object>();
+        hashMap.put("ids",Convert.toStrArray(table.getTemplateSelector()));
+        List<cn.noobzz.gen.domain.Template> templates = templateMapper.selectTemplateListByDynamic(hashMap);
+        List<String> collect = templates.stream().map(cn.noobzz.gen.domain.Template::getPath).collect(Collectors.toList());
+        for (String template : collect)
         {
             // 渲染模板
             StringWriter sw = new StringWriter();

@@ -1,4 +1,4 @@
-<template>
+<template xmlns="http://www.w3.org/1999/html">
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :model="queryParams" size="small" :inline="true" label-width="68px">
       <el-form-item label="模板名称" prop="templateName">
@@ -66,7 +66,15 @@
         >删除
         </el-button>
       </el-col>
-      <!--      <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />-->
+      <el-col :span="1.5">
+        <el-button
+          type="info"
+          plain
+          icon="el-icon-sort"
+          size="mini"
+          @click="toggleExpandAll"
+        >展开/折叠</el-button>
+      </el-col>
     </el-row>
 
     <el-table
@@ -115,14 +123,6 @@
         </template>
       </el-table-column>
     </el-table>
-
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
     <!-- 预览界面 -->
 
 
@@ -239,10 +239,6 @@ export default {
       },
       // 查询参数
       queryParams: {
-        pageNum: 1,
-        pageSize: 10,
-        group: null,
-        templateName: null
       },
       uploadUrl: process.env.VUE_APP_BASE_API + '/template/uploadTemplate',
       // 大小限制(MB)
@@ -271,7 +267,7 @@ export default {
       getTemplateList(this.queryParams).then(response => {
           this.templateList = handleTree(response.data.list, 'templateId')
           console.log(this.templateList)
-          this.total = response.data.total
+          this.total = response.data.size
           this.loading = false
         }
       )
@@ -314,6 +310,14 @@ export default {
         this.$modal.closeLoading()
         this.$message.success(res.data.key + '上传成功！')
       }
+    },
+    /** 展开/折叠操作 */
+    toggleExpandAll() {
+      this.refreshTable = false
+      this.isExpandAll = !this.isExpandAll
+      this.$nextTick(() => {
+        this.refreshTable = true
+      })
     },
     handleBeforeUpload(file) {
       // 校检文件类型

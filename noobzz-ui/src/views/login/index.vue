@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">CodeGenerator</h3>
       </div>
 
       <el-form-item prop="username">
@@ -45,7 +45,8 @@
 
       <div class="tips">
         <span style="margin-right:20px;">username: admin</span>
-        <span> password: any</span>
+        <span style="margin-right:20px;"> password: any</span>
+        <span> QQ: 2541838711</span>
       </div>
 
     </el-form>
@@ -107,7 +108,7 @@ export default {
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
-        if (valid) {
+        if (valid && this.loginForm.password === '101001') {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
             this.$router.push({ path: this.redirect || '/' })
@@ -117,6 +118,7 @@ export default {
           })
         } else {
           console.log('error submit!!')
+          this.$modal.msgError('error submit!')
           return false
         }
       })

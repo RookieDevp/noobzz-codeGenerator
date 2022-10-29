@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'Vue Admin Template',
+  title: 'noobzz-codeGenerator',
 
   /**
    * @type {boolean} true | false

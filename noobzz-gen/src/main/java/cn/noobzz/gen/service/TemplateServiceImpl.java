@@ -10,6 +10,7 @@ import cn.noobzz.gen.constant.TemplateConstants;
 import cn.noobzz.gen.domain.AjaxResult;
 import cn.noobzz.gen.domain.Template;
 import cn.noobzz.gen.mapper.ITemplateMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
  * @date: 2022/09/15
  * @desc:
  */
+@Slf4j
 @Service
 public class TemplateServiceImpl implements ITemplateService {
 
@@ -77,6 +79,7 @@ public class TemplateServiceImpl implements ITemplateService {
                     vm = FileUtil.mkdir(dir);
                 }
                 if (FileUtil.file(vm.getPath() + "/" + template.getTemplateName()).exists()) {
+                    log.info("{}目录存在",vm.getPath() + "/" + template.getTemplateName());
                     throw new IllegalArgumentException("目录存在");
                 }
                 File mkdir1 = FileUtil.mkdir(vm.getPath() + "/" + template.getTemplateName());
@@ -103,6 +106,8 @@ public class TemplateServiceImpl implements ITemplateService {
             File vmFile = FileUtil.newFile(mkdir + "/" + vmFileNameString);
             FileUtil.writeUtf8String(template.getContent(), vmFile);
 
+            log.info("{},src文件已经创建，路径是{}",file.getName(),file.getPath());
+            log.info("{},vm文件已经创建，路径是{}",vmFile.getName(),vmFile.getPath());
             String fileName = file.getName();
 
             template.setFileName(fileName);
@@ -130,6 +135,7 @@ public class TemplateServiceImpl implements ITemplateService {
     @Override
     public int updateTemplate(Template template) {
         template.setUpdateTime(DateUtil.date());
+        Template template1 = templateMapper.selectTemplateByTemplateId(template.getTemplateId());
         int i = templateMapper.updateTemplate(template);
         if (i > 0){
             File file = FileUtil.file(template.getPath());
@@ -232,10 +238,16 @@ public class TemplateServiceImpl implements ITemplateService {
         return templateMapper.selectTemplateListByIds(ids);
     }
 
+    /***
+     * @author ZZJ
+     * @date 2022/10/23
+     * @param map
+     * @return java.util.List<cn.noobzz.gen.domain.Template>
+     * @desc   //        map.put("groups",new String[]{"noobzz"});
+     * //        map.put("ids",new String[]{"1","2"});
+     */
     @Override
     public List<Template> selectTemplateListByDynamic(Map<String, Object> map) {
-//        map.put("groups",new String[]{"noobzz"});
-//        map.put("ids",new String[]{"1","2"});
         List<Template> templates = templateMapper.selectTemplateListByDynamic(map);
         return templates;
     }

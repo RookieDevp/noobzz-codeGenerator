@@ -96,10 +96,12 @@
           >Velocity语法
           </el-link>
           <codemirror
+            v-if="form.templateType === 'F'"
             ref="myCm"
             v-model="form.content"
             :options="cmOptions"
           />
+          <el-empty v-else description="请选择文件模板类型" />
         </el-col>
       </el-row>
     </el-form>
@@ -170,6 +172,9 @@ export default {
         parentId: [
           { required: true, trigger: 'blur' }
         ],
+        fileType: [
+          { required: true, trigger: 'blur' }
+        ],
         templateType: [
           { required: true, trigger: 'blur' }
         ],
@@ -201,7 +206,7 @@ export default {
             addTemplateList(this.form).then(response => {
               if (response.code === 200) {
                 this.$message.success(response.msg)
-                this.$router.push(`/templateList`)
+                this.$router.push({ path: '/templateList/list' })
               }
             })
           }
@@ -222,7 +227,7 @@ export default {
         this.form.parentId = this.$route.query.parentId
       }
       if (this.$route.query.templateId !== undefined) {
-        getTemplateList({ templateType: 'F', templateId: this.$route.query.templateId }).then(response => {
+        getTemplateList({ templateId: this.$route.query.templateId }).then(response => {
           this.form = response.data.list[0]
         })
       }
