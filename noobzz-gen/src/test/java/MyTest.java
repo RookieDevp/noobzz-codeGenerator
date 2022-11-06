@@ -1,6 +1,26 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import cn.hutool.db.Db;
+import cn.hutool.db.meta.JdbcType;
+import cn.noobzz.gen.GenApplication;
+import cn.noobzz.gen.domain.GenTable;
+import cn.noobzz.gen.domain.GenTableColumn;
+import cn.noobzz.gen.domain.Template;
+import cn.noobzz.gen.service.GenTableColumnServiceImpl;
+import cn.noobzz.gen.service.GenTableServiceImpl;
+import cn.noobzz.gen.service.TemplateServiceImpl;
+import com.alibaba.druid.pool.DruidDataSource;
+import com.alibaba.druid.pool.DruidPooledConnection;
+import com.baomidou.dynamic.datasource.DynamicRoutingDataSource;
+import com.baomidou.dynamic.datasource.toolkit.DynamicDataSourceContextHolder;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import javax.annotation.Resource;
+import javax.sql.DataSource;
+import java.sql.*;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -9,7 +29,47 @@ import java.util.stream.Stream;
  * @date: 2022/10/14
  * @desc:
  */
+@SpringBootTest(classes = GenApplication.class)
 public class MyTest {
+
+    @Resource
+    private DataSource dataSource;
+
+    @Autowired
+    private TemplateServiceImpl templateService;
+
+    @Autowired
+    private GenTableColumnServiceImpl genTableService;
+
+    @Test
+    public void getDatasource() throws ClassNotFoundException, SQLException {
+        Connection root = DriverManager.getConnection("jdbc:mysql://localhost:3306/tt?serverTimezone=GMT%2B8" , "root" , "123456");
+        DynamicRoutingDataSource ds = (DynamicRoutingDataSource) dataSource;
+        DruidDataSource druidDataSource = new DruidDataSource();
+        druidDataSource.setUrl("jdbc:mysql://localhost:3306/ry-cloud?serverTimezone=GMT%2B8");
+        druidDataSource.setUsername("root");
+        druidDataSource.setPassword("123456");
+        druidDataSource.registerMbean();
+        druidDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        ds.addDataSource("localhost",druidDataSource);
+        List<GenTableColumn> genTableColumns = genTableService.selectGenTableColumnListByTableId(24L);
+        String localhost = DynamicDataSourceContextHolder.push("localhost");
+//        boolean closed = root.isClosed();
+//        DatabaseMetaData metaData = root.getMetaData();
+//        System.out.println("schema = " + metaData);
+
+//        Map<Object, Object> targetDataSources = new HashMap<>();
+//        targetDataSources.put("druidDataSource",druidDataSource);
+//        DynamicDataSource dynamicDataSource = new DynamicDataSource();
+//        dynamicDataSource.setTargetDataSources(targetDataSources);
+//        dynamicDataSource.setDefaultTargetDataSource(druidDataSource);
+//        DataSourceContextHolder.setDataSources("druidDataSource");
+        List<GenTableColumn> genTableColumns2 = genTableService.selectGenTableColumnListByTableId(2L);
+        DynamicDataSourceContextHolder.clear();
+        List<GenTableColumn> genTableColumns3 = genTableService.selectGenTableColumnListByTableId(24L);
+        System.out.println("");
+    }
+
     public static void main(String[] args) {
 
         String [] arr = {"东","南","西","北"};

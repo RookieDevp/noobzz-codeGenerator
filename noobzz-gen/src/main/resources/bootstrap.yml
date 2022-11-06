@@ -1,6 +1,6 @@
 # Tomcat
 server:
-  port: 9201
+  port: 9301
 
 # Spring
 spring: 
@@ -9,7 +9,7 @@ spring:
     name: noobzz-gen
   profiles:
     # 环境配置
-    active: dev
+    active: prod
   jackson:
     time-zone: GMT+8
   cloud:

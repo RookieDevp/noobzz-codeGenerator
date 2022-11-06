@@ -97,7 +97,10 @@ public class GenTableServiceImpl implements IGenTableService
         DynamicDataSourceContextHolder.push(genTable.getOptions());
         List<GenTable> list = genTableMapper.selectDbTableList(genTable);
         DynamicDataSourceContextHolder.push(DataSourceConstants.DATASOURCE_MASTER);
-        return list;
+        List<GenTable> genTables = genTableMapper.selectGenTableList(new GenTable());
+        List<String> collect = genTables.stream().map(item -> item.getTableName()).collect(Collectors.toList());
+        List<GenTable> filterTables = list.stream().filter(item -> !collect.contains(item.getTableName())).collect(Collectors.toList());
+        return filterTables;
     }
 
     /**
