@@ -1,6 +1,18 @@
 <template>
   <!-- 导入表 -->
   <el-dialog title="导入表" :visible.sync="visible" width="800px" top="5vh" append-to-body>
+    <el-form size="small">
+      <el-form-item label="数据源" prop="tableName">
+        <el-select @change="changeDatasource" style="width: 90%" :clearable=true size="small" v-model="datasource" placeholder="请选择">
+          <el-option
+            v-for="item in datasourceOptions"
+            :key="item.connectionName"
+            :label="item.connectionName"
+            :value="item.connectionName">
+          </el-option>
+        </el-select>
+      </el-form-item>
+    </el-form>
     <el-form ref="queryForm" :model="queryParams" size="small" :inline="true">
       <el-form-item label="表名称" prop="tableName">
         <el-input
@@ -48,9 +60,12 @@
 
 <script>
 import { listDbTable, importTable } from '@/api/gen'
+import { listDatasource } from '@/api/datasource'
 export default {
   data() {
     return {
+      datasourceOptions: [],
+      datasource: undefined,
       // 遮罩层
       visible: false,
       // 选中数组值
@@ -64,7 +79,8 @@ export default {
         pageNum: 1,
         pageSize: 10,
         tableName: undefined,
-        tableComment: undefined
+        tableComment: undefined,
+        datasource: undefined
       }
     }
   },
@@ -83,6 +99,24 @@ export default {
     },
     // 查询表数据
     getList() {
+      if (this.datasource === undefined || this.datasource === 'master') {
+        listDatasource({ pageNum: 1, pageSize: 1000 }).then(response => {
+          this.datasourceOptions = response.data.list
+          this.datasourceOptions.unshift({ connectionName: 'master' })
+        })
+      }
+      if (this.queryParams.datasource !== undefined){
+        listDbTable(this.queryParams).then(res => {
+          if (res.code === 200) {
+            this.dbTableList = res.data.list
+            this.total = res.data.total
+          }
+        })
+      }
+    },
+    changeDatasource(datasource){
+      this.queryParams.pageNum = 1
+      this.queryParams.datasource = datasource
       listDbTable(this.queryParams).then(res => {
         if (res.code === 200) {
           this.dbTableList = res.data.list
@@ -107,7 +141,7 @@ export default {
         this.$modal.msgError('请选择要导入的表')
         return
       }
-      importTable({ tables: tableNames }).then(res => {
+      importTable({ tables: tableNames, datasource: this.datasource }).then(res => {
         this.$modal.msgSuccess(res.msg)
         if (res.code === 200) {
           this.visible = false

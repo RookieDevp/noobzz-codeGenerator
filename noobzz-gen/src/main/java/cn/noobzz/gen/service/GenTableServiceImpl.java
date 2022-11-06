@@ -3,6 +3,7 @@ package cn.noobzz.gen.service;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.HttpUtil;
+import cn.noobzz.gen.constant.DataSourceConstants;
 import cn.noobzz.gen.constant.GenConstants;
 import cn.noobzz.gen.constant.TemplateConstants;
 import cn.noobzz.gen.domain.GenTable;
@@ -15,6 +16,7 @@ import cn.noobzz.gen.util.VelocityInitializer;
 import cn.noobzz.gen.util.VelocityUtils;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.dynamic.datasource.toolkit.DynamicDataSourceContextHolder;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -92,7 +94,10 @@ public class GenTableServiceImpl implements IGenTableService
     @Override
     public List<GenTable> selectDbTableList(GenTable genTable)
     {
-        return genTableMapper.selectDbTableList(genTable);
+        DynamicDataSourceContextHolder.push(genTable.getOptions());
+        List<GenTable> list = genTableMapper.selectDbTableList(genTable);
+        DynamicDataSourceContextHolder.push(DataSourceConstants.DATASOURCE_MASTER);
+        return list;
     }
 
     /**

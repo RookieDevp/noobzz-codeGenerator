@@ -6,6 +6,7 @@ import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.io.file.FileReader;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.noobzz.gen.constant.DataSourceConstants;
 import cn.noobzz.gen.domain.AjaxResult;
 import cn.noobzz.gen.domain.GenTable;
 import cn.noobzz.gen.domain.GenTableColumn;
@@ -14,6 +15,7 @@ import cn.noobzz.gen.service.IGenTableColumnService;
 import cn.noobzz.gen.service.IGenTableService;
 import cn.noobzz.gen.util.VelocityUtils;
 import com.alibaba.fastjson2.JSON;
+import com.baomidou.dynamic.datasource.toolkit.DynamicDataSourceContextHolder;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -136,8 +138,13 @@ public class GenController
      */
     @GetMapping("/db/list")
     public AjaxResult dataList(@RequestParam(value = "pageNum",required = false) String pageNum,
-                               @RequestParam(value = "pageSize",required = false) String pageSize, GenTable genTable)
+                               @RequestParam(value = "pageSize",required = false) String pageSize,
+                               @RequestParam(value = "datasource",required = false) String datasource,
+                               GenTable genTable)
     {
+        if (datasource != null){
+            genTable.setOptions(datasource);
+        }
         PageHelper.startPage(Convert.toInt(pageNum),Convert.toInt(pageSize));
         List<GenTable> list = genTableService.selectDbTableList(genTable);
         return AjaxResult.success(new PageInfo<>(list));
@@ -157,11 +164,13 @@ public class GenController
      * 导入表结构（保存）
      */
     @PostMapping("/importTable")
-    public AjaxResult importTableSave(String tables)
+    public AjaxResult importTableSave(String datasource,String tables)
     {
         String[] tableNames = Convert.toStrArray(tables);
         // 查询表信息
+        DynamicDataSourceContextHolder.push(datasource);
         List<GenTable> tableList = genTableService.selectDbTableListByNames(tableNames);
+        DynamicDataSourceContextHolder.push(DataSourceConstants.DATASOURCE_MASTER);
         genTableService.importGenTable(tableList);
         return AjaxResult.success();
     }
