@@ -121,7 +121,7 @@ public class DataSourceServiceImpl implements IDataSourceService {
             dataSource.setStatus("1");
         }
         int i = datasourceMapper.insertDatasource(dataSource);
-        if (i > 1){
+        if (i > 0){
             try {
                 addDynamicDataSource(dataSource);
             }catch (Exception e){
