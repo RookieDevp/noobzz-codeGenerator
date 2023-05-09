@@ -99,6 +99,16 @@ public class GenTable
 
     private String templateSelector;
 
+    private String fromDatasource;
+
+    public String getFromDatasource() {
+        return fromDatasource;
+    }
+
+    public void setFromDatasource(String fromDatasource) {
+        this.fromDatasource = fromDatasource;
+    }
+
     public String getTemplateSelector() {
         return templateSelector;
     }

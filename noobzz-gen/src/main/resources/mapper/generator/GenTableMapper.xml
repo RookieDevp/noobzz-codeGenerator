@@ -24,6 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="updateTime"     column="update_time"       />
 		<result property="remark"         column="remark"            />
 		<result property="templateSelector"     column="template_selector"    />
+		<result property="fromDatasource"     column="from_datasource"    />
 		<collection  property="columns"  javaType="java.util.List"  resultMap="GenTableColumnResult" />
 	</resultMap>
 	
@@ -51,7 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectGenTableVo">
-        select table_id, table_name, table_comment, sub_table_name, sub_table_fk_name, class_name, tpl_category, package_name, module_name, business_name, function_name, function_author, gen_type, gen_path, options, create_by, create_time, update_by, update_time, remark,template_selector from gen_table
+        select table_id, table_name, table_comment, sub_table_name, sub_table_fk_name, class_name, tpl_category, package_name, module_name, business_name, function_name, function_author, gen_type, gen_path, options, create_by, create_time, update_by, update_time, remark,template_selector,from_datasource from gen_table
     </sql>
     
     <select id="selectGenTableList" parameterType="GenTable" resultMap="GenTableResult">

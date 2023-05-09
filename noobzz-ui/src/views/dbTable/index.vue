@@ -104,6 +104,7 @@
         :show-overflow-tooltip="true"
         width="120"
       />
+      <el-table-column prop="fromDatasource" align="center" label="数据源" width="80" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="160" />
       <el-table-column label="更新时间" align="center" prop="updateTime" width="160" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -245,7 +246,7 @@ export default {
   },
   methods: {
     moveFileHandler(vm,tableId){
-      this.$prompt('请输入移动的绝对路径目录', '提示', {
+      this.$prompt('请输入移动的绝对路径目录', '移动指定目录', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputPattern: /[a-z]|[A-Z]:(\\[^\\/&?\n]+)\\?/,
@@ -259,7 +260,7 @@ export default {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '取消输入'
+          message: '取消移动'
         });
       });
 
