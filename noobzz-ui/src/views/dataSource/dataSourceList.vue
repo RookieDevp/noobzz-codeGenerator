@@ -9,30 +9,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <!--      <el-form-item label="连接url" prop="url">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.url"-->
-      <!--          placeholder="请输入连接url"-->
-      <!--          clearable-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="用户名" prop="username">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.username"-->
-      <!--          placeholder="请输入用户名"-->
-      <!--          clearable-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="密码" prop="password">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.password"-->
-      <!--          placeholder="请输入密码"-->
-      <!--          clearable-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -101,8 +77,12 @@
       <el-table-column label="用户名" align="center" prop="username" />
       <el-table-column label="密码" align="center" prop="password" />
       <el-table-column label="数据库类型" align="center" prop="dataBaseType" />
-      <el-table-column label="数据状态" align="center" prop="status" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="数据状态" align="center" prop="status">
+        <template slot-scope="scope">
+          <span>{{ scope.row.status === '0' ? '正常' : '停用'}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="200px">
         <template slot-scope="scope">
           <el-button
             size="mini"

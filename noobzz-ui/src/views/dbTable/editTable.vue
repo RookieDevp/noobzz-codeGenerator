@@ -37,6 +37,17 @@
               </el-select>
             </template>
           </el-table-column>
+          <el-table-column
+            width="50px"
+            label="是否主键"
+            prop="isPk"
+            min-width="10%"
+            :show-overflow-tooltip="true"
+          >
+            <template slot-scope="scope">
+              <span>{{ scope.row.isPk === '1' ? '是' : '否'}}</span>
+            </template>
+          </el-table-column>
           <el-table-column label="java属性" min-width="10%">
             <template slot-scope="scope">
               <el-input v-model="scope.row.javaField" />

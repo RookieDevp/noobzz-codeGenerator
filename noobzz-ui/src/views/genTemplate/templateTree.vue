@@ -41,8 +41,10 @@
         >下载当前文件</el-button>
         <el-link style="float: right" type="primary" :underline="false" href="https://www.cnblogs.com/codingsilence/archive/2011/03/29/2146580.html" target="_blank">Velocity语法</el-link>
         <codemirror
+          ref="code"
           v-if="fileInfo.content !== null"
           v-model="fileInfo.content"
+          :config="cmOptions"
           :options="cmOptions"
         />
         <el-empty v-else description="请选择模板" />
@@ -80,6 +82,10 @@ import { codemirror } from 'vue-codemirror'
 import 'codemirror/mode/velocity/velocity'
 import 'codemirror/theme/neat.css'
 import 'codemirror/lib/codemirror.css'
+
+import 'codemirror/addon/fold/foldgutter.css'
+import 'codemirror/addon/fold/foldcode'
+import 'codemirror/addon/fold/foldgutter'
 import { handleTree } from '@/utils'
 
 export default {
@@ -106,17 +112,28 @@ export default {
       currentTemplateName: '',
       currentGroupName: '',
       cmOptions: {
+        lineWrapping: true,
         value: '',
         mode: 'text/velocity',
         theme: 'neat',
         lineNumbers: true,
         tabSize: 4,
-        line: true
+        line: true,
+        gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],  // 折叠栏位置
+        foldGutter: true,    // 开启折叠栏
+        extraKeys: {
+          'Ctrl-Q': function (cm) {  // 配置折叠快捷键
+            cm.foldCode(cm.getCursor())
+          }
+        }
       }
     }
   },
   created() {
     this.getList()
+  },
+  mounted() {
+    this.cmOptions.foldGutter = true
   },
   methods: {
     getList() {
