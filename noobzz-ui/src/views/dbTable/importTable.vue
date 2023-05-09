@@ -30,10 +30,31 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
+    </el-form>
+    <el-form size="small">
+    <el-form-item prop="templateSelector">
+          <span slot="label">
+            模板选择器
+            <el-tooltip content="代码生成的模板器集合" placement="top">
+              <i class="el-icon-question" />
+            </el-tooltip>
+          </span>
+      <el-cascader
+        ref="cascader"
+        :options="options"
+        :props="props"
+        collapse-tags
+        v-model="templateSelector"
+        @change="changeTemplate"
+        clearable
+      />
+    </el-form-item>
     </el-form>
     <el-row>
       <el-table ref="table" :data="dbTableList" height="260px" @row-click="clickRow" @selection-change="handleSelectionChange">
@@ -61,9 +82,20 @@
 <script>
 import { listDbTable, importTable } from '@/api/gen'
 import { listDatasource } from '@/api/datasource'
+import {getTemplateList} from "@/api/template";
+import {handleTree} from "@/utils";
 export default {
   data() {
     return {
+      options: [],
+      props: {
+        multiple: true,
+        label: 'templateName',
+        value: 'templateId',
+        children: 'children',
+        emitPath: false
+      },
+      templateSelector: [],
       datasourceOptions: [],
       datasource: undefined,
       // 遮罩层
@@ -85,6 +117,9 @@ export default {
     }
   },
   methods: {
+    changeTemplate(data){
+      console.log(data)
+    },
     // 显示弹框
     show() {
       this.getList()
@@ -113,6 +148,10 @@ export default {
           }
         })
       }
+
+      getTemplateList({}).then(response => {
+        this.options = handleTree(response.data.list,"templateId")
+      });
     },
     changeDatasource(datasource){
       this.queryParams.pageNum = 1
@@ -141,7 +180,8 @@ export default {
         this.$modal.msgError('请选择要导入的表')
         return
       }
-      importTable({ tables: tableNames, datasource: this.datasource }).then(res => {
+      console.log(this.templateSelector)
+      importTable({ tables: tableNames, datasource: this.datasource,templateSelector: this.templateSelector.toString() }).then(res => {
         this.$modal.msgSuccess(res.msg)
         if (res.code === 200) {
           this.visible = false

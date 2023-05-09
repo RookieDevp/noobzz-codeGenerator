@@ -31,10 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -166,11 +163,12 @@ public class GenController
      * 导入表结构（保存）
      */
     @PostMapping("/importTable")
-    public AjaxResult importTableSave(String datasource,String tables)
+    public AjaxResult importTableSave(String datasource,String tables,String templateSelector)
     {
         String[] tableNames = Convert.toStrArray(tables);
         // 查询表信息
         List<GenTable> tableList = DataSourceUtils.switchDatasource(datasource, () -> genTableService.selectDbTableListByNames(tableNames));
+        tableList.forEach(each -> each.setTemplateSelector(templateSelector));
         genTableService.importGenTable(datasource,tableList);
         return AjaxResult.success();
     }
