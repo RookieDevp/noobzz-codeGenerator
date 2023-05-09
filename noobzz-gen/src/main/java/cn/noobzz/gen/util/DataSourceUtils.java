@@ -1,9 +1,12 @@
 package cn.noobzz.gen.util;
 
+import cn.noobzz.gen.constant.DataSourceConstants;
 import cn.noobzz.gen.domain.DataSource;
+import com.baomidou.dynamic.datasource.toolkit.DynamicDataSourceContextHolder;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.function.Supplier;
 
 /**
  * @author: ZZJ
@@ -22,5 +25,12 @@ public class DataSourceUtils {
             return false;
         }
         return true;
+    }
+
+    public static <T> T switchDatasource(String datasource, Supplier<T> statement) {
+        DynamicDataSourceContextHolder.push(datasource);
+        T result = statement.get();
+        DynamicDataSourceContextHolder.push(DataSourceConstants.DATASOURCE_MASTER);
+        return result;
     }
 }

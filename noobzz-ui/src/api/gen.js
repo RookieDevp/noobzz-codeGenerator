@@ -114,3 +114,15 @@ export function customPreview(tableId) {
     method: 'get'
   })
 }
+
+export function movePathWithCode(tableId,template,movePath) {
+  return request({
+    url: '/gen/movePathWithCode',
+    method: 'post',
+    data:{
+      "tableId": tableId+'',
+      "template": template,
+      "movePath": movePath
+    }
+  })
+}

@@ -100,7 +100,7 @@ export default {
     // 查询表数据
     getList() {
       if (this.datasource === undefined || this.datasource === 'master') {
-        listDatasource({ pageNum: 1, pageSize: 1000 }).then(response => {
+        listDatasource({ pageNum: 1, pageSize: 1000, status: '0' }).then(response => {
           this.datasourceOptions = response.data.list
           this.datasourceOptions.unshift({ connectionName: 'master' })
         })

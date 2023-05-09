@@ -1,5 +1,7 @@
 package cn.noobzz.gen.service;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import cn.noobzz.gen.constant.DataSourceConstants;
 import cn.noobzz.gen.domain.AjaxResult;
@@ -20,8 +22,12 @@ import javax.annotation.Resource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import static net.sf.jsqlparser.parser.feature.Feature.values;
 
 /**
  * @author: ZZJ
@@ -141,7 +147,21 @@ public class DataSourceServiceImpl implements IDataSourceService {
     public int updateDatasource(DataSource datasource)
     {
         datasource.setUpdateTime(DateUtil.date());
-        return datasourceMapper.updateDatasource(datasource);
+
+        boolean b = DataSourceUtils.testConnection(datasource);
+        if (!b){
+            datasource.setStatus("1");
+        }
+        int i = datasourceMapper.updateDatasource(datasource);
+        if (i > 0){
+            try {
+                addDynamicDataSource(datasource);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        return i;
     }
 
     /**

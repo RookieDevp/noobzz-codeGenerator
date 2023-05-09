@@ -1,6 +1,7 @@
 package cn.noobzz.gen.service;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.HttpUtil;
 import cn.noobzz.gen.constant.DataSourceConstants;
@@ -11,11 +12,13 @@ import cn.noobzz.gen.domain.GenTableColumn;
 import cn.noobzz.gen.mapper.GenTableColumnMapper;
 import cn.noobzz.gen.mapper.GenTableMapper;
 import cn.noobzz.gen.mapper.ITemplateMapper;
+import cn.noobzz.gen.util.DataSourceUtils;
 import cn.noobzz.gen.util.GenUtils;
 import cn.noobzz.gen.util.VelocityInitializer;
 import cn.noobzz.gen.util.VelocityUtils;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import com.baomidou.dynamic.datasource.toolkit.DynamicDataSourceContextHolder;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -168,8 +171,9 @@ public class GenTableServiceImpl implements IGenTableService
      * @param tableList 导入表列表
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void importGenTable(List<GenTable> tableList)
+    @DSTransactional
+//    @Transactional(rollbackFor = Exception.class)
+    public void importGenTable(String datasource,List<GenTable> tableList)
     {
 //        String operName = SecurityUtils.getUsername();
         try
@@ -182,7 +186,8 @@ public class GenTableServiceImpl implements IGenTableService
                 if (row > 0)
                 {
                     // 保存列信息
-                    List<GenTableColumn> genTableColumns = genTableColumnMapper.selectDbTableColumnsByName(tableName);
+                    List<GenTableColumn> genTableColumns = DataSourceUtils.switchDatasource(datasource, () -> genTableColumnMapper.selectDbTableColumnsByName(tableName));
+
                     for (GenTableColumn column : genTableColumns)
                     {
                         GenUtils.initColumnField(column, table);
@@ -327,6 +332,26 @@ public class GenTableServiceImpl implements IGenTableService
         }
     }
 
+    @Override
+    public String movePathWithCode(String movePath, String template,Long tableId) {
+        GenTable genTable = genTableMapper.selectGenTableById(tableId);
+        // 设置主子表信息
+        setSubTable(genTable);
+        // 设置主键列信息
+        setPkColumn(genTable);
+
+        VelocityInitializer.initVelocity();
+
+        VelocityContext context = VelocityUtils.prepareContext(genTable);
+        // 渲染模板
+        StringWriter sw = new StringWriter();
+        Template tpl = Velocity.getTemplate(template, "UTF-8");
+        tpl.merge(context, sw);
+        String fileName = VelocityUtils.getFileNameForCustom(template, genTable);
+        File file = FileUtil.writeUtf8String(sw.toString(), new File(movePath + "/" + fileName));
+        return file.getAbsolutePath();
+    }
+
     /**
      * 同步数据库
      * 
@@ -339,7 +364,7 @@ public class GenTableServiceImpl implements IGenTableService
         GenTable table = genTableMapper.selectGenTableByName(tableName);
         List<GenTableColumn> tableColumns = table.getColumns();
         Map<String, GenTableColumn> tableColumnMap = tableColumns.stream().collect(Collectors.toMap(GenTableColumn::getColumnName, Function.identity()));
-
+        // TODO DataSourceUtils
         List<GenTableColumn> dbTableColumns = genTableColumnMapper.selectDbTableColumnsByName(tableName);
         if (ObjectUtil.isEmpty(dbTableColumns))
         {

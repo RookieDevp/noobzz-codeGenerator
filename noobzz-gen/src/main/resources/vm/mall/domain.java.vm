@@ -1,0 +1,36 @@
+package cn.noobzz.mall.core.domain;
+
+import cn.noobzz.mall.core.base.BaseDomain;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+/**
+ * ${functionName}对象 ${tableName}
+ * 
+ * @author ZZJ
+ * @date ${datetime}
+ */
+@Data
+@ToString
+@NoArgsConstructor 
+public class ${ClassName} extends BaseDomain
+{
+    private static final long serialVersionUID = 1L;
+
+#foreach ($column in $columns)
+#if(!$table.isSuperColumn($column.javaField))
+    /** $column.columnComment */
+#if($column.list)
+#set($parentheseIndex=$column.columnComment.indexOf("（"))
+#if($parentheseIndex != -1)
+#set($comment=$column.columnComment.substring(0, $parentheseIndex))
+#else
+#set($comment=$column.columnComment)
+#end
+#end
+#end
+    private $column.javaType $column.javaField;
+    
+#end    
+}

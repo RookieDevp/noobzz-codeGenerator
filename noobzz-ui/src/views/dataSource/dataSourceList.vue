@@ -85,7 +85,19 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="数据源ID" align="center" prop="datasourceId" />
       <el-table-column label="连接名" align="center" prop="connectionName" />
-      <el-table-column label="连接url" align="center" prop="url" />
+      <el-table-column label="连接url" align="center" prop="url" show-overflow-tooltip>
+        <template slot-scope="scope">
+          <span>{{ scope.row.url }}</span>
+          <el-link
+            v-clipboard:copy="scope.row.url"
+            v-clipboard:success="clipboardSuccess"
+            :underline="false"
+            icon="el-icon-document-copy"
+            style="float:right"
+          >
+          </el-link>
+        </template>
+      </el-table-column>
       <el-table-column label="用户名" align="center" prop="username" />
       <el-table-column label="密码" align="center" prop="password" />
       <el-table-column label="数据库类型" align="center" prop="dataBaseType" />
@@ -150,6 +162,10 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
+        <el-button
+          type="success"
+          @click="handleConnection(form)"
+        >测试连接</el-button>
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
@@ -159,7 +175,14 @@
 
 <script>
 
-import { addDatasource, listDatasource, testDatasource } from '@/api/datasource'
+import {
+  addDatasource,
+  delDatasource,
+  getDatasource,
+  listDatasource,
+  testDatasource,
+  updateDatasource
+} from '@/api/datasource'
 
 export default {
   name: 'Datasource',
@@ -220,6 +243,10 @@ export default {
         this.loading = false
       })
     },
+    /** 复制代码成功 */
+    clipboardSuccess() {
+      this.$modal.msgSuccess('复制成功')
+    },
     // 取消按钮
     cancel() {
       this.open = false
@@ -260,6 +287,7 @@ export default {
     handleAdd() {
       this.reset()
       this.open = true
+      this.form.dataBaseType = 'Mysql'
       this.title = '添加数据源'
     },
     /** 修改按钮操作 */
@@ -308,7 +336,7 @@ export default {
         ...this.queryParams
       }, `datasource_${new Date().getTime()}.xlsx`)
     },
-    handleConnection(row){
+    handleConnection(row) {
       testDatasource(row).then(response => {
         this.$modal.msgSuccess(response.msg)
       })

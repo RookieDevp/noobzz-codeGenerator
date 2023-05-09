@@ -155,6 +155,72 @@ public class VelocityUtils
         return templates;
     }
 
+    public static String getFileNameForCustom(String template, GenTable genTable){
+        // 文件名称
+        String fileName = "";
+        // 包路径
+        String packageName = genTable.getPackageName();
+        // 模块名
+        String moduleName = genTable.getModuleName();
+        // 大写类名
+        String className = genTable.getClassName();
+        // 业务名称
+        String businessName = genTable.getBusinessName();
+
+        String javaPath = PROJECT_PATH + "/" + StrUtil.replace(packageName, ".", "/");
+        String mybatisPath = MYBATIS_PATH + "/" + moduleName;
+        String vuePath = "vue";
+        String defaultPath = "default";
+
+        if (template.contains("domain.java.vm"))
+        {
+            fileName = StrUtil.format("{}.java", className);
+        }
+        if (template.contains("sub-domain.java.vm") && StrUtil.equals(GenConstants.TPL_SUB, genTable.getTplCategory()))
+        {
+            fileName = StrUtil.format("{}.java", genTable.getSubTable().getClassName());
+        }
+        else if (template.contains("mapper.java.vm"))
+        {
+            fileName = StrUtil.format("{}Mapper.java", className);
+        }
+        else if (template.contains("service.java.vm"))
+        {
+            fileName = StrUtil.format("I{}Service.java", className);
+        }
+        else if (template.contains("serviceImpl.java.vm"))
+        {
+            fileName = StrUtil.format("{}ServiceImpl.java", className);
+        }
+        else if (template.contains("controller.java.vm"))
+        {
+            fileName = StrUtil.format("{}Controller.java", className);
+        }
+        else if (template.contains("mapper.xml.vm"))
+        {
+            fileName = StrUtil.format("{}Mapper.xml", className);
+        }
+        else if (template.contains("sql.vm"))
+        {
+            fileName = businessName + "Menu.sql";
+        }
+        else if (template.contains("api.js.vm"))
+        {
+            fileName = StrUtil.format("{}.js", businessName);
+        }
+        else if (template.contains("index.vue.vm"))
+        {
+            fileName = StrUtil.format("index.vue");
+        }
+        else if (template.contains("index-tree.vue.vm"))
+        {
+            fileName = StrUtil.format("index.vue");
+        }else if (template.contains("default")){
+            fileName = StrUtil.format("{}/"+template.substring(template.lastIndexOf('/')), defaultPath);
+        }
+        return fileName;
+    }
+
     /**
      * 获取文件名
      */

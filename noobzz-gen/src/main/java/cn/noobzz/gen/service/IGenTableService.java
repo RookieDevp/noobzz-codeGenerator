@@ -72,7 +72,7 @@ public interface IGenTableService
      * 
      * @param tableList 导入表列表
      */
-    public void importGenTable(List<GenTable> tableList);
+    public void importGenTable(String datasource,List<GenTable> tableList);
 
     /**
      * 预览代码
@@ -99,6 +99,14 @@ public interface IGenTableService
      * @return 数据
      */
     public void generatorCode(String tableName);
+
+    /**
+     * 移动代码（自定义路径）
+     *
+     * @param movePath 移动路径
+     * @return 数据
+     */
+    public String movePathWithCode(String movePath, String vm, Long tableId);
 
     /**
      * 同步数据库

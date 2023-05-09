@@ -13,8 +13,10 @@ import cn.noobzz.gen.domain.GenTableColumn;
 import cn.noobzz.gen.domain.VelocityTemplate;
 import cn.noobzz.gen.service.IGenTableColumnService;
 import cn.noobzz.gen.service.IGenTableService;
+import cn.noobzz.gen.util.DataSourceUtils;
 import cn.noobzz.gen.util.VelocityUtils;
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.dynamic.datasource.toolkit.DynamicDataSourceContextHolder;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -168,10 +170,8 @@ public class GenController
     {
         String[] tableNames = Convert.toStrArray(tables);
         // 查询表信息
-        DynamicDataSourceContextHolder.push(datasource);
-        List<GenTable> tableList = genTableService.selectDbTableListByNames(tableNames);
-        DynamicDataSourceContextHolder.push(DataSourceConstants.DATASOURCE_MASTER);
-        genTableService.importGenTable(tableList);
+        List<GenTable> tableList = DataSourceUtils.switchDatasource(datasource, () -> genTableService.selectDbTableListByNames(tableNames));
+        genTableService.importGenTable(datasource,tableList);
         return AjaxResult.success();
     }
 
@@ -222,6 +222,21 @@ public class GenController
         byte[] data = genTableService.downloadCode(tableName);
         genCode(response, data);
     }
+
+    /**
+     * 生成代码（下载方式）
+     */
+    @PostMapping("/movePathWithCode")
+    public AjaxResult movePathWithCode(@RequestBody String post) throws IOException
+    {
+        JSONObject jsonObject = JSONObject.parseObject(post);
+        Long tableId = Long.parseLong((String) jsonObject.get("tableId"));
+        String template = (String) jsonObject.get("template");
+        String movePath = (String) jsonObject.get("movePath");
+        String path = genTableService.movePathWithCode(movePath, template, tableId);
+        return AjaxResult.success("移动成功",path);
+    }
+
 
     /**
      * 生成代码（自定义路径）

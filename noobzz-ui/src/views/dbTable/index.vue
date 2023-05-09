@@ -157,7 +157,8 @@
           :label="key.substring(key.lastIndexOf('/')+1,key.indexOf('.vm'))"
           :name="index+''"
         >
-          <!--          <el-link v-clipboard:copy="value" v-clipboard:success="clipboardSuccess" :underline="false" icon="el-icon-document-copy" style="float:right">复制</el-link>-->
+          <el-link @click="moveFileHandler(key,preview.tableId)" :underline="false" icon="el-icon-folder-checked" style="float:right">移动</el-link>
+          <el-link v-clipboard:copy="value" v-clipboard:success="clipboardSuccess" :underline="false" icon="el-icon-document-copy" style="float:right;margin-right: 20px">复制</el-link>
           <pre><code class="hljs" v-html="highlightedCode(value, key)" /></pre>
         </el-tab-pane>
       </el-tabs>
@@ -171,7 +172,16 @@
 import importTable from './importTable'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
-import { customPreview, customPreviewTable, delTable, genCode, listTable, previewTable, synchDb } from '@/api/gen'
+import {
+  customPreview,
+  customPreviewTable,
+  delTable,
+  genCode,
+  listTable,
+  movePathWithCode,
+  previewTable,
+  synchDb
+} from '@/api/gen'
 import { handleTree } from '@/utils'
 hljs.registerLanguage('java', require('highlight.js/lib/languages/java'))
 hljs.registerLanguage('xml', require('highlight.js/lib/languages/xml'))
@@ -214,6 +224,7 @@ export default {
       },
       // 预览参数
       preview: {
+        tableId: '',
         open: false,
         title: '代码预览',
         data: {},
@@ -233,6 +244,26 @@ export default {
     }
   },
   methods: {
+    moveFileHandler(vm,tableId){
+      this.$prompt('请输入移动的绝对路径目录', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /[a-z]|[A-Z]:(\\[^\\/&?\n]+)\\?/,
+        inputErrorMessage: '目录路径格式不正确'
+      }).then(({ value }) => {
+        movePathWithCode(tableId,vm,value).then(response => {
+          if (response.code === 200) {
+            this.$message.success(response.data)
+          }
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消输入'
+        });
+      });
+
+    },
     /** 查询表集合 */
     getList() {
       this.loading = true
@@ -288,6 +319,7 @@ export default {
         this.preview.data = response.data
         this.preview.open = true
         this.preview.activeName = '0'
+        this.preview.tableId = row.tableId
       })
     },
     /** 高亮显示 */
