@@ -367,7 +367,7 @@ public class GenTableColumn
     {
         return StrUtil.equalsAnyIgnoreCase(javaField,
                 // BaseEntity
-                "createBy", "createTime", "updateBy", "updateTime", "remark",
+                "createBy", "createTime", "updateBy", "updateTime", "remark","status",
                 // TreeEntity
                 "parentName", "parentId", "orderNum", "ancestors");
     }

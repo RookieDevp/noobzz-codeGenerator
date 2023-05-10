@@ -168,7 +168,10 @@ public class GenController
         String[] tableNames = Convert.toStrArray(tables);
         // 查询表信息
         List<GenTable> tableList = DataSourceUtils.switchDatasource(datasource, () -> genTableService.selectDbTableListByNames(tableNames));
-        tableList.forEach(each -> each.setTemplateSelector(templateSelector));
+        tableList.forEach(each -> {
+            each.setTemplateSelector(templateSelector);
+            each.setFromDatasource(datasource);
+        });
         genTableService.importGenTable(datasource,tableList);
         return AjaxResult.success();
     }

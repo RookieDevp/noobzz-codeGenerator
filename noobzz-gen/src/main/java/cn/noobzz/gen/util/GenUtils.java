@@ -182,9 +182,11 @@ public class GenUtils
         if (autoRemovePre && StringUtils.isNotEmpty(tablePrefix))
         {
             String[] searchList = StringUtils.split(tablePrefix, ",");
+
             tableName = replaceFirst(tableName, searchList);
         }
-        return StrUtil.upperFirst(tableName);
+//        return StrUtil.upperFirst(tableName);
+        return StrUtil.upperFirst(StrUtil.toCamelCase(tableName));
     }
 
     /**

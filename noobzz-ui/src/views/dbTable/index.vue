@@ -104,7 +104,9 @@
         :show-overflow-tooltip="true"
         width="120"
       />
-      <el-table-column prop="fromDatasource" align="center" label="数据源" width="80" />
+      <el-table-column prop="fromDatasource" align="center" label="数据源" width="80"
+                       :filters="filterDb"
+                       :filter-method="filterHandler" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="160" />
       <el-table-column label="更新时间" align="center" prop="updateTime" width="160" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -184,6 +186,7 @@ import {
   synchDb
 } from '@/api/gen'
 import { handleTree } from '@/utils'
+import {listDatasource} from "@/api/datasource";
 hljs.registerLanguage('java', require('highlight.js/lib/languages/java'))
 hljs.registerLanguage('xml', require('highlight.js/lib/languages/xml'))
 hljs.registerLanguage('html', require('highlight.js/lib/languages/xml'))
@@ -223,6 +226,7 @@ export default {
         tableName: undefined,
         tableComment: undefined
       },
+      filterDb:[],
       // 预览参数
       preview: {
         tableId: '',
@@ -245,6 +249,13 @@ export default {
     }
   },
   methods: {
+    // filterDatasource(value, row) {
+    //   return row.fromDat === value;
+    // },
+    filterHandler(value, row, column) {
+      const property = column['property'];
+      return row[property] === value;
+    },
     moveFileHandler(vm,tableId){
       this.$prompt('请输入移动的绝对路径目录', '移动指定目录', {
         confirmButtonText: '确定',
@@ -272,8 +283,16 @@ export default {
         this.tableList = response.data.list
         this.total = response.data.total
         this.loading = false
-      }
-      )
+      });
+
+      listDatasource({ pageNum: 1, pageSize: 1000, status: '0' }).then(response => {
+        response.data.list.forEach(each =>{
+          this.filterDb.push({
+            text: each.connectionName,
+            value: each.connectionName
+          })
+        })
+      })
     },
     /** 搜索按钮操作 */
     handleQuery() {
