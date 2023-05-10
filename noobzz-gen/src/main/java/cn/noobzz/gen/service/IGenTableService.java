@@ -124,6 +124,14 @@ public interface IGenTableService
     public byte[] downloadCode(String[] tableNames);
 
     /**
+     * 批量移动生成代码（下载方式）
+     *
+     * @param tableNames 表数组
+     * @return 数据
+     */
+    public byte[] batchMoveGenCode(String[] tableNames);
+
+    /**
      * 修改保存参数校验
      * 
      * @param genTable 业务信息

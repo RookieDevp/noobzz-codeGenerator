@@ -1,4 +1,4 @@
-package cn.noobzz.user.service;
+package ${packageName}service;
 
 import cn.noobzz.mall.core.domain.${ClassName};
 import com.baomidou.mybatisplus.extension.service.IService;

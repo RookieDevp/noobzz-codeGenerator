@@ -39,6 +39,11 @@
           type="text"
           @click="downloadText(fileInfo.fileName, fileInfo.content)"
         >下载当前文件</el-button>
+        <el-button
+          icon="el-icon-finished"
+          type="text"
+          @click="saveTemplate()"
+        >保存</el-button>
         <el-link style="float: right" type="primary" :underline="false" href="https://www.cnblogs.com/codingsilence/archive/2011/03/29/2146580.html" target="_blank">Velocity语法</el-link>
         <codemirror
           ref="code"
@@ -77,7 +82,7 @@
 
 <script>
 import { createTemplate, deleteTemplate} from '@/api/gen'
-import { getTemplate, getTemplateList } from '@/api/template'
+import {editTemplate, getTemplate, getTemplateList} from '@/api/template'
 import { codemirror } from 'vue-codemirror'
 import 'codemirror/mode/velocity/velocity'
 import 'codemirror/theme/neat.css'
@@ -92,6 +97,7 @@ export default {
   components: { codemirror },
   data() {
     return {
+      templateForm: {},
       form: {},
       rules: {},
       title: '',
@@ -136,6 +142,17 @@ export default {
     this.cmOptions.foldGutter = true
   },
   methods: {
+    saveTemplate(){
+      this.templateForm.content = this.fileInfo.content;
+      console.log(this.templateForm)
+      editTemplate(this.templateForm).then(response => {
+        if (response.code === 200) {
+          this.$message.success(response.msg)
+        }else {
+          this.$message.error(response.msg)
+        }
+      })
+    },
     getList() {
       getTemplateList({}).then(response => {
         this.templateOptions = handleTree(response.data.list,'templateId');
@@ -165,6 +182,7 @@ export default {
       console.log(data.templateId)
       getTemplate(data.templateId).then(response => {
         this.fileInfo.content = response.data.content
+        this.templateForm = response.data
       })
     },
     clickNewFile() {

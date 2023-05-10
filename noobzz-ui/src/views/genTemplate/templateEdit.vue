@@ -197,6 +197,7 @@ export default {
         if (valid) {
           console.log(this.form)
           if (this.form.templateId != null){
+            console.log(this.form)
             editTemplate(this.form).then(response => {
               if (response.code === 200) {
                 this.$message.success(response.msg)

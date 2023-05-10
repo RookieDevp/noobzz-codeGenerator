@@ -239,6 +239,7 @@ export default {
   },
   created() {
     this.getList()
+    this.listDatasource()
   },
   activated() {
     const time = this.$route.query.t
@@ -249,9 +250,17 @@ export default {
     }
   },
   methods: {
-    // filterDatasource(value, row) {
-    //   return row.fromDat === value;
-    // },
+    listDatasource() {
+      listDatasource({ pageNum: 1, pageSize: 1000, status: '0' }).then(response => {
+        response.data.list.unshift({ connectionName: 'master' })
+        response.data.list.forEach(each =>{
+          this.filterDb.push({
+            text: each.connectionName,
+            value: each.connectionName
+          })
+        })
+      })
+    },
     filterHandler(value, row, column) {
       const property = column['property'];
       return row[property] === value;
@@ -284,15 +293,6 @@ export default {
         this.total = response.data.total
         this.loading = false
       });
-
-      listDatasource({ pageNum: 1, pageSize: 1000, status: '0' }).then(response => {
-        response.data.list.forEach(each =>{
-          this.filterDb.push({
-            text: each.connectionName,
-            value: each.connectionName
-          })
-        })
-      })
     },
     /** 搜索按钮操作 */
     handleQuery() {

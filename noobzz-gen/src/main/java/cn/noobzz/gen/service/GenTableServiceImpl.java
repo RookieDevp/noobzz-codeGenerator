@@ -427,6 +427,18 @@ public class GenTableServiceImpl implements IGenTableService
         return outputStream.toByteArray();
     }
 
+    @Override
+    public byte[] batchMoveGenCode(String[] tableNames) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ZipOutputStream zip = new ZipOutputStream(outputStream);
+        for (String tableName : tableNames)
+        {
+            generatorCode(tableName, zip);
+        }
+        IOUtils.closeQuietly(zip);
+        return outputStream.toByteArray();
+    }
+
     /**
      * 查询表信息并生成代码
      */

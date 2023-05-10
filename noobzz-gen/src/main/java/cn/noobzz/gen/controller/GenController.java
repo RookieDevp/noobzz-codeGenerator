@@ -225,7 +225,7 @@ public class GenController
     }
 
     /**
-     * 生成代码（下载方式）
+     * 移动代码（直接方式）
      */
     @PostMapping("/movePathWithCode")
     public AjaxResult movePathWithCode(@RequestBody String post) throws IOException
@@ -260,13 +260,24 @@ public class GenController
     }
 
     /**
-     * 批量生成代码
+     * 批量生成代码（压缩包）
      */
     @GetMapping("/batchGenCode")
     public void batchGenCode(HttpServletResponse response, String tables) throws IOException
     {
         String[] tableNames = Convert.toStrArray(tables);
         byte[] data = genTableService.downloadCode(tableNames);
+        genCode(response, data);
+    }
+
+    /**
+     * 批量移动生成代码（直接移动）
+     */
+    @GetMapping("/batchMoveGenCode")
+    public void batchMoveGenCode(HttpServletResponse response, String tables) throws IOException
+    {
+        String[] tableNames = Convert.toStrArray(tables);
+        byte[] data = genTableService.batchMoveGenCode(tableNames);
         genCode(response, data);
     }
 
