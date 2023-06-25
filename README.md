@@ -8,7 +8,31 @@
 3、多数据源（暂支持MySQL）
 4、代码通用配置
 
-示例图片：
+# 代码生成器TODO
+
+- [ ] 通用模板、分类功能模板
+- [ ] 数据源切换
+- [ ] 公共字段
+- [ ] 模板修改
+- [x] 系统配置
+- [x] 导入表可勾选模板
+- [x] 生成代码到指定路径
+- [ ] 实时渲染（示例值）
+- [ ] 数据源加数据库字段
+- [ ] 模板列表调整
+- [ ] 各字段类型动态映射
+- [x] 代码预览复制
+- [ ] 生成信息规则采用正则表达式
+- [x] 自定义导入表（区分默认导表）
+- [ ] 移除多表的生成、字典类型
+- [x] 显示主键字段、是否可以为null、是否是索引字段
+- [ ] 接入Oracle数据库
+- [ ] 创建目录（根目录无法删除）和创建模板分离
+- [x] 代码生成菜单-添加数据源来源字段
+- [ ] 打包doker、改单体架构
+- [ ] 规范代码、删除冗余代码
+
+# 示例图片：
 ![image](https://github.com/RookieDevp/noobzz-codeGenerator/assets/88661272/4a6fe1b8-5e1e-440b-bb6c-812ae36d559b)
 ![image](https://github.com/RookieDevp/noobzz-codeGenerator/assets/88661272/e4b65a75-43a5-437a-814c-a6196a3a9b06)
 ![image](https://github.com/RookieDevp/noobzz-codeGenerator/assets/88661272/b1ab9cbe-39ba-491b-83de-caca35feb046)
