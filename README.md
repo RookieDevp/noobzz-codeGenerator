@@ -15,16 +15,11 @@
 4、代码通用配置
 # 开始
 
-准备：
+### 准备：
 
 1、导入noobzz-gen.sql
 
 2、修改application-dev.yml中的数据库配置
-
-### 启动前端
-```
-运行启动类GenApplication.class(端口9300)
-```
 ### 启动后端
 ```
 运行启动类GenApplication.class(端口9301)
@@ -36,6 +31,10 @@ npm install
 
 npm run dev
 ```
+### 访问地址
+
+http://127.0.0.1:9301
+
 # 代码生成器TODO
 
 - [ ] 通用模板、分类功能模板
