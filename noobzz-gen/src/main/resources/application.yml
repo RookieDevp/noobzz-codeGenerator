@@ -15,9 +15,9 @@ spring:
       datasource:
         master:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://noobzzdb.mysql.rds.aliyuncs.com:3306/noobzz-gen?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+          url: jdbc:mysql://127.0.0.1:3306/noobzz-gen?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
           username: root
-          password: mysql@2023
+          password: 123456
 
 # mybatis配置
 mybatis:
