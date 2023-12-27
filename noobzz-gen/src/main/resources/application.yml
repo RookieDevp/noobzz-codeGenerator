@@ -1,0 +1,40 @@
+# Tomcat
+server:
+  port: 9301
+
+# Spring
+spring:
+  application:
+    # 应用名称
+    name: noobzz-gen
+  jackson:
+    time-zone: GMT+8
+# mysql配置
+  datasource:
+    dynamic:
+      datasource:
+        master:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://noobzzdb.mysql.rds.aliyuncs.com:3306/noobzz-gen?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+          username: root
+          password: mysql@2023
+
+# mybatis配置
+mybatis:
+  configuration:
+    mapUnderscoreToCamelCase: true
+  # 搜索指定包别名
+  typeAliasesPackage: cn.noobzz.gen.domain
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath:mapper/**/*.xml
+
+# 代码生成
+gen:
+  # 作者
+  author: zhang
+  # 默认生成包路径 system 需改成自己的模块名称 如 system monitor tool
+  packageName: cn.noobzz.blog
+  # 自动去除表前缀，默认是false
+  autoRemovePre: true
+  # 表前缀（生成类名不会包含表前缀，多个用逗号分隔）
+  tablePrefix: sys_,t_

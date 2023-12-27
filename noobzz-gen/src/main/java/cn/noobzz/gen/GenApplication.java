@@ -13,7 +13,6 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  * @date: 2022/09/03
  * @desc:
  */
-@EnableDiscoveryClient
 @SpringBootApplication(exclude = {PageHelperAutoConfiguration.class})
 public class GenApplication {
 

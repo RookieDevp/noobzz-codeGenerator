@@ -1,4 +1,6 @@
 # noobzz-codeGenerator
+⭐欢迎star，您的支持是我更新的动力！
+
 代码生成器
 基于若依代码生成思路，抽离出一个独立的代码生成器
 
@@ -13,12 +15,27 @@
 4、代码通用配置
 # 开始
 
-准备：导入noobzz-gen.sql
+准备：
 
-1、启动后端-GenApplication.class(端口9301)
+1、导入noobzz-gen.sql
 
-2、启动前端-npm run dev
+2、修改application-dev.yml中的数据库配置
 
+### 启动前端
+```
+运行启动类GenApplication.class(端口9300)
+```
+### 启动后端
+```
+运行启动类GenApplication.class(端口9301)
+```
+
+### 启动前端
+```
+npm install
+
+npm run dev
+```
 # 代码生成器TODO
 
 - [ ] 通用模板、分类功能模板

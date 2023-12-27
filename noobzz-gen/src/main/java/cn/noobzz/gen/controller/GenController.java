@@ -2,11 +2,6 @@ package cn.noobzz.gen.controller;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.file.FileNameUtil;
-import cn.hutool.core.io.file.FileReader;
-import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.noobzz.gen.constant.DataSourceConstants;
 import cn.noobzz.gen.domain.AjaxResult;
 import cn.noobzz.gen.domain.GenTable;
 import cn.noobzz.gen.domain.GenTableColumn;
@@ -15,15 +10,11 @@ import cn.noobzz.gen.service.IGenTableColumnService;
 import cn.noobzz.gen.service.IGenTableService;
 import cn.noobzz.gen.util.DataSourceUtils;
 import cn.noobzz.gen.util.VelocityUtils;
-import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.baomidou.dynamic.datasource.toolkit.DynamicDataSourceContextHolder;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +22,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
