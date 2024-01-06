@@ -1,6 +1,6 @@
 package ${packageName}.entity;
 
-import org.guet.frameworks.database.base.BaseEntity;
+import org.guet.frameworks.database.base.BaseDO;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.ToString;
 
 /**
  * ${functionName}对象 ${tableName}
- * 
+ *
  * @author ${author}
  * @date ${datetime}
  */
@@ -17,7 +17,7 @@ import lombok.ToString;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
 @TableName("${tableName}")
-public class ${ClassName} extends BaseEntity
+public class ${ClassName}DO extends BaseDO
 {
     private static final long serialVersionUID = 1L;
 
@@ -33,7 +33,7 @@ public class ${ClassName} extends BaseEntity
 #end
 #end
     private $column.javaType $column.javaField;
-    
-#end     
-#end    
+
+#end
+#end
 }

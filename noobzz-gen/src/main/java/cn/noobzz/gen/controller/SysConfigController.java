@@ -1,13 +1,10 @@
 package cn.noobzz.gen.controller;
 
-import cn.noobzz.gen.config.GenConfigComponent;
 import cn.noobzz.gen.domain.AjaxResult;
 import cn.noobzz.gen.domain.GenConfig;
 import cn.noobzz.gen.service.GenConfigServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
 
 /**
  * @author: ZZJ
@@ -19,18 +16,11 @@ import java.util.HashMap;
 public class SysConfigController {
 
     @Autowired
-    private GenConfigComponent config;
-
-    @Autowired
     private GenConfigServiceImpl configService;
 
     @GetMapping("/getInit")
     public AjaxResult getInitGenConfig() {
         GenConfig one = configService.selectGenConfigById(1L);
-        config.setAuthor(one.getAuthor());
-        config.setAutoRemovePre(one.isAutoRemovePre());
-        config.setPackageName(one.getPackageName());
-        config.setTablePrefix(one.getTablePrefix());
         return AjaxResult.success(one);
     }
 
@@ -46,10 +36,6 @@ public class SysConfigController {
         if (i < 0){
             return AjaxResult.error();
         }
-        config.setAuthor(genConfig.getAuthor());
-        config.setAutoRemovePre(genConfig.isAutoRemovePre());
-        config.setPackageName(genConfig.getPackageName());
-        config.setTablePrefix(genConfig.getTablePrefix());
         return AjaxResult.success();
     }
 

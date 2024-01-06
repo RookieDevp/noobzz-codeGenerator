@@ -1,12 +1,15 @@
 package cn.noobzz.gen.util;
 
 import cn.hutool.core.util.StrUtil;
-import cn.noobzz.gen.config.GenConfigComponent;
+import cn.hutool.extra.spring.SpringUtil;
 import cn.noobzz.gen.constant.GenConstants;
+import cn.noobzz.gen.domain.GenConfig;
 import cn.noobzz.gen.domain.GenTable;
 import cn.noobzz.gen.domain.GenTableColumn;
+import cn.noobzz.gen.mapper.GenConfigMapper;
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
@@ -17,17 +20,24 @@ import java.util.Arrays;
  */
 public class GenUtils
 {
+    public static void main(String[] args) {
+        GenConfigMapper genConfigMapper = SpringUtil.getBean(GenConfigMapper.class);
+        GenConfig genConfigById = genConfigMapper.selectGenConfigById(1L);
+        System.out.println(genConfigById);
+    }
     /**
      * 初始化表信息
      */
     public static void initTable(GenTable genTable)
     {
+        GenConfigMapper genConfigMapper = SpringUtil.getBean(GenConfigMapper.class);
+        GenConfig genConfigById = genConfigMapper.selectGenConfigById(1L);
         genTable.setClassName(convertClassName(genTable.getTableName()));
-        genTable.setPackageName(GenConfigComponent.getPackageName());
-        genTable.setModuleName(getModuleName(GenConfigComponent.getPackageName()));
+        genTable.setPackageName(genConfigById.getPackageName());
+        genTable.setModuleName(getModuleName(genConfigById.getPackageName()));
         genTable.setBusinessName(getBusinessName(genTable.getTableName()));
         genTable.setFunctionName(replaceText(genTable.getTableComment()));
-        genTable.setFunctionAuthor(GenConfigComponent.getAuthor());
+        genTable.setFunctionAuthor(genConfigById.getAuthor());
     }
 
     /**
@@ -177,8 +187,10 @@ public class GenUtils
      */
     public static String convertClassName(String tableName)
     {
-        boolean autoRemovePre = GenConfigComponent.getAutoRemovePre();
-        String tablePrefix = GenConfigComponent.getTablePrefix();
+        GenConfigMapper genConfigMapper = SpringUtil.getBean(GenConfigMapper.class);
+        GenConfig genConfigById = genConfigMapper.selectGenConfigById(1L);
+        boolean autoRemovePre = genConfigById.isAutoRemovePre();
+        String tablePrefix = genConfigById.getTablePrefix();
         if (autoRemovePre && StringUtils.isNotEmpty(tablePrefix))
         {
             String[] searchList = StringUtils.split(tablePrefix, ",");
