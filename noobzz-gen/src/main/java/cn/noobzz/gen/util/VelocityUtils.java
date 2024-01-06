@@ -47,7 +47,7 @@ public class VelocityUtils
         VelocityContext velocityContext = new VelocityContext();
         velocityContext.put("tplCategory", genTable.getTplCategory());
         velocityContext.put("tableName", genTable.getTableName());
-        velocityContext.put("functionName", org.apache.commons.lang3.StringUtils.isNotEmpty(functionName) ? functionName : "【请填写功能名称】");
+        velocityContext.put("functionName", org.apache.commons.lang3.StringUtils.isNotEmpty(functionName) ? functionName : "【请填写功能名称-表注释】");
         velocityContext.put("ClassName", genTable.getClassName());
         velocityContext.put("className", StringUtils.uncapitalize(genTable.getClassName()));
         velocityContext.put("moduleName", genTable.getModuleName());

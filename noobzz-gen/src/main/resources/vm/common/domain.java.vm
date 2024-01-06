@@ -1,6 +1,6 @@
-package cn.noobzz.mall.core.domain;
+package ${packageName}.entity;
 
-import cn.noobzz.mall.core.base.BaseDomain;
+import org.guet.frameworks.database.base.BaseEntity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,14 +9,15 @@ import lombok.ToString;
 /**
  * ${functionName}对象 ${tableName}
  * 
- * @author ZZJ
+ * @author ${author}
  * @date ${datetime}
  */
 @Data
-@ToString
 @NoArgsConstructor
+@Accessors(chain = true)
+@EqualsAndHashCode(callSuper = true)
 @TableName("${tableName}")
-public class ${ClassName} extends BaseDomain
+public class ${ClassName} extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
@@ -32,6 +33,7 @@ public class ${ClassName} extends BaseDomain
 #end
 #end
     private $column.javaType $column.javaField;
+    
 #end     
 #end    
 }

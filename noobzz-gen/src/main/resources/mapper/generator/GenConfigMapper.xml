@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.noobzz.gen.mapper.GenConfigMapper">
+
+    <resultMap type="GenConfig" id="GenConfigResult">
+        <result property="id"    column="id"    />
+        <result property="author"    column="author"    />
+        <result property="packageName"    column="package_name"    />
+        <result property="autoRemovePre"    column="auto_remove_pre"    />
+        <result property="tablePrefix"    column="table_prefix"    />
+    </resultMap>
+
+    <sql id="selectGenConfigVo">
+        select id, author, package_name, auto_remove_pre, table_prefix from gen_config
+    </sql>
+
+    <select id="selectGenConfigList" parameterType="GenConfig" resultMap="GenConfigResult">
+        <include refid="selectGenConfigVo"/>
+        <where>
+            <if test="author != null  and author != ''"> and author = #{author}</if>
+            <if test="packageName != null  and packageName != ''"> and package_name like concat('%', #{packageName}, '%')</if>
+            <if test="autoRemovePre != null  and autoRemovePre != ''"> and auto_remove_pre = #{autoRemovePre}</if>
+            <if test="tablePrefix != null  and tablePrefix != ''"> and table_prefix = #{tablePrefix}</if>
+        </where>
+    </select>
+
+    <select id="selectGenConfigById" parameterType="Long" resultMap="GenConfigResult">
+        <include refid="selectGenConfigVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertGenConfig" parameterType="GenConfig">
+        insert into gen_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="author != null">author,</if>
+            <if test="packageName != null">package_name,</if>
+            <if test="autoRemovePre != null">auto_remove_pre,</if>
+            <if test="tablePrefix != null">table_prefix,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="author != null">#{author},</if>
+            <if test="packageName != null">#{packageName},</if>
+            <if test="autoRemovePre != null">#{autoRemovePre},</if>
+            <if test="tablePrefix != null">#{tablePrefix},</if>
+        </trim>
+    </insert>
+
+    <update id="updateGenConfig" parameterType="GenConfig">
+        update gen_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="author != null">author = #{author},</if>
+            <if test="packageName != null">package_name = #{packageName},</if>
+            <if test="autoRemovePre != null">auto_remove_pre = #{autoRemovePre},</if>
+            <if test="tablePrefix != null">table_prefix = #{tablePrefix},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteGenConfigById" parameterType="Long">
+        delete from gen_config where id = #{id}
+    </delete>
+
+    <delete id="deleteGenConfigByIds" parameterType="String">
+        delete from gen_config where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

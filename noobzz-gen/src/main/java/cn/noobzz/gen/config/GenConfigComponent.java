@@ -1,8 +1,6 @@
 package cn.noobzz.gen.config;
 
 import lombok.ToString;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,10 +9,8 @@ import org.springframework.stereotype.Component;
  * @author ruoyi
  */
 @Component
-@ConfigurationProperties(prefix = "gen")
-@RefreshScope
 @ToString
-public class GenConfig
+public class GenConfigComponent
 {
     /** 作者 */
     public static String author;
@@ -35,7 +31,7 @@ public class GenConfig
 
     public void setAuthor(String author)
     {
-        GenConfig.author = author;
+        GenConfigComponent.author = author;
     }
 
     public static String getPackageName()
@@ -45,7 +41,7 @@ public class GenConfig
 
     public void setPackageName(String packageName)
     {
-        GenConfig.packageName = packageName;
+        GenConfigComponent.packageName = packageName;
     }
 
     public static boolean getAutoRemovePre()
@@ -55,7 +51,7 @@ public class GenConfig
 
     public void setAutoRemovePre(boolean autoRemovePre)
     {
-        GenConfig.autoRemovePre = autoRemovePre;
+        GenConfigComponent.autoRemovePre = autoRemovePre;
     }
 
     public static String getTablePrefix()
@@ -65,6 +61,6 @@ public class GenConfig
 
     public void setTablePrefix(String tablePrefix)
     {
-        GenConfig.tablePrefix = tablePrefix;
+        GenConfigComponent.tablePrefix = tablePrefix;
     }
 }

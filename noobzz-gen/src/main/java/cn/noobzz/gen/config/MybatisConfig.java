@@ -9,6 +9,9 @@ import org.springframework.context.annotation.Configuration;
 @MapperScan("cn.noobzz.**.mapper")
 public class MybatisConfig {
 
+    /**
+     * 分页插件
+     */
     @Bean
     public PageInterceptor pageInterceptor() {
         return new PageInterceptor();

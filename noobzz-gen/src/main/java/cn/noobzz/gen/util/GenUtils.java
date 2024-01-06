@@ -1,7 +1,7 @@
 package cn.noobzz.gen.util;
 
 import cn.hutool.core.util.StrUtil;
-import cn.noobzz.gen.config.GenConfig;
+import cn.noobzz.gen.config.GenConfigComponent;
 import cn.noobzz.gen.constant.GenConstants;
 import cn.noobzz.gen.domain.GenTable;
 import cn.noobzz.gen.domain.GenTableColumn;
@@ -23,11 +23,11 @@ public class GenUtils
     public static void initTable(GenTable genTable)
     {
         genTable.setClassName(convertClassName(genTable.getTableName()));
-        genTable.setPackageName(GenConfig.getPackageName());
-        genTable.setModuleName(getModuleName(GenConfig.getPackageName()));
+        genTable.setPackageName(GenConfigComponent.getPackageName());
+        genTable.setModuleName(getModuleName(GenConfigComponent.getPackageName()));
         genTable.setBusinessName(getBusinessName(genTable.getTableName()));
         genTable.setFunctionName(replaceText(genTable.getTableComment()));
-        genTable.setFunctionAuthor(GenConfig.getAuthor());
+        genTable.setFunctionAuthor(GenConfigComponent.getAuthor());
     }
 
     /**
@@ -177,8 +177,8 @@ public class GenUtils
      */
     public static String convertClassName(String tableName)
     {
-        boolean autoRemovePre = GenConfig.getAutoRemovePre();
-        String tablePrefix = GenConfig.getTablePrefix();
+        boolean autoRemovePre = GenConfigComponent.getAutoRemovePre();
+        String tablePrefix = GenConfigComponent.getTablePrefix();
         if (autoRemovePre && StringUtils.isNotEmpty(tablePrefix))
         {
             String[] searchList = StringUtils.split(tablePrefix, ",");
